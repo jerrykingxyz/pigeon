@@ -1,12 +1,11 @@
 class Channel {
-  get name() {
-    return null;
-  }
-  
   constructor(options) {
     this.options = options;
   }
 
+  get name() {
+    return null;
+  }
   // eslint-disable-next-line
   async sendMessage(msg) {
     return;
