@@ -22,7 +22,8 @@
     "arrow-spacing": 2
   },
   "globals": {
-    "describe": "readonly"
+    "describe": "readonly",
+    "it": "readonly"
   },
   "env": {
     "es6": true,

@@ -13,8 +13,8 @@ class Webhook extends Channel {
    * @param {Object} options.headers - http headers
    */
   constructor(name, options) {
-    super(options);
-    this.name = name;
+    super(name);
+    this.options = options;
   }
 
   /**

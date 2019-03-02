@@ -1,3 +1,3 @@
-describe('pigeon test', function () {
-  console.log('no test')
-})
+describe('pigeon test', () => {
+  require('./channel/index.test.js');
+});
