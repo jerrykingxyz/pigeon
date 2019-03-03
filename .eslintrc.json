@@ -21,13 +21,10 @@
     "prefer-const": [ 2, { "destructuring": "all" } ],
     "arrow-spacing": 2
   },
-  "globals": {
-    "describe": "readonly",
-    "it": "readonly"
-  },
   "env": {
     "es6": true,
-    "node": true
+    "node": true,
+    "mocha": true
   },
   "extends": [
     "eslint:recommended"

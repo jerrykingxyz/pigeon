@@ -4,8 +4,8 @@
   "description": "",
   "main": "src/index.js",
   "scripts": {
-    "lint": "eslint ./src/index.js",
-    "test": "./node_modules/.bin/mocha -b"
+    "lint": "eslint ./src",
+    "test": "./node_modules/.bin/mocha --recursive"
   },
   "repository": {
     "type": "git",
