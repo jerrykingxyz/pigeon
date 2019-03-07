@@ -20,6 +20,14 @@ class Pigeon {
     
     this.channelInstance[name] = instance;
   }
+
+  async send(letter) {
+    const channel = this.channelInstance[letter.channel];
+    if (!channel) {
+      throw new Error('channel not exist');
+    }
+    return channel.sendMessage(letter.msg);
+  }
 }
 
 module.exports = Pigeon;
