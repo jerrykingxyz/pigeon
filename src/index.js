@@ -2,7 +2,7 @@ const Channel = require('./channel');
 
 class Pigeon {
   constructor() {
-    this.channelInstance = {};
+    this.channels = {};
   }
 
   addChannel(instance) {
@@ -14,15 +14,15 @@ class Pigeon {
     if (!name || typeof name !== 'string') {
       throw new Error('channel name must be a string');
     }
-    if (this.channelInstance[name]) {
+    if (this.channels[name]) {
       throw new Error(`[${name}] channel already exists`);
     }
     
-    this.channelInstance[name] = instance;
+    this.channels[name] = instance;
   }
 
   async send(letter) {
-    const channel = this.channelInstance[letter.channel];
+    const channel = this.channels[letter.channel];
     if (!channel) {
       throw new Error('channel not exist');
     }
