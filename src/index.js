@@ -1,4 +1,5 @@
 const Channel = require('./channel');
+const Plugin = require('./plugin');
 
 class Pigeon {
   constructor() {
@@ -20,6 +21,14 @@ class Pigeon {
     }
     
     this.channels[name] = instance;
+  }
+
+  addPlugin(plugin) {
+    if (!(plugin instanceof Plugin)) {
+      throw new Error('add plugin failed, you must input a plugin instance.');
+    }
+
+    plugin.main(this);
   }
 
   async send(letter) {
