@@ -15,37 +15,42 @@ class Email extends Channel {
      * @param {String} options.auth.pass - sender's email authorization code
      */
     constructor(name, options) {
-        super(name)
-        this.name = name
-        this.options = options
+        super(name);
 
-        this.host = options.host
         this.auth = options.auth
 
         this.mailTransport = nodemailer.createTransport({
-            host: this.host,
+            host: options.host,
             secureConnection: true,
-            auth: this.auth,
+            auth: options.auth,
         })
     }
 
     /**
      *
      * @param {Object} mgs - information about email
+     * @param {String} mgs.sender - email's sender
      * @param {String} mgs.receiver - email's receiver
      * @param {String} mgs.subject- email's subject
      * @param {String} mgs.message - email's message
      */
     sendMessage(mgs) {
 
-        return new Promise(function (resolve, reject) {
+        return new Promise((resolve, reject) => {
+                let sender = '';
+                if (mgs.sender) {
+                    sender = mgs.sender
+                } else {
+                    sender = this.auth.user
+                }
+
                 this.mailTransport.sendMail({
-                    form: this.auth.user,
+                    form: sender,
                     to: mgs.receiver,
                     subject: mgs.subject,
                     text: mgs.message
-                },(err,info) => {
-                    if(err) {
+                }, (err, info) => {
+                    if (err) {
                         reject(err)
                     } else {
                         resolve(info)
