@@ -1,5 +1,6 @@
 const Channel = require('./channel');
 const Plugin = require('./plugin');
+const Event = require('./event');
 
 class Pigeon {
   constructor() {
@@ -36,12 +37,20 @@ class Pigeon {
       throw new Error('letter must be a object');
     }
 
+    const event = await this.emit(new Event('beforeSend', letter));
+    // mock data
+    if (event.__mock_data__) {
+      return event.__mock_data__;
+    }
+
+    letter = event.ctx;
     const channel = this.channels[letter.channel];
     if (!channel) {
       throw new Error('channel not exist');
     }
 
-    return channel.sendMessage(letter.msg);
+    const res = await channel.sendMessage(letter.msg);
+    return this.emit(new Event('afterSend', res));
   }
 
   on(eventName, callback) {
@@ -77,16 +86,23 @@ class Pigeon {
     }
   }
 
-  emit(eventName) {
-    if (typeof eventName !== 'string') {
-      throw new Error('event name must be string');
-    }
-
-    const events = this.events[eventName];
-    if (!Array.isArray(events)) {
+  async emit(event) {
+    if (!(event instanceof Event)) {
       return;
     }
-    events.forEach(e => e());
+
+    const list = this.events[event.name];
+    if (!Array.isArray(list)) {
+      return;
+    }
+
+    for (const callback of list) {
+      await callback(event);
+      if (event.__mock_data__) {
+        break;
+      }
+    }
+    return event;
   }
 }
 
