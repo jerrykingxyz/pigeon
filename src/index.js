@@ -37,20 +37,20 @@ class Pigeon {
       throw new Error('letter must be a object');
     }
 
-    const event = await this.emit(new Event('beforeSend', letter));
-    // mock data
-    if (event.__mock_data__) {
-      return event.__mock_data__;
-    }
+    // emit beforeSend event
+    await this.emit(new Event('beforeSend', letter));
 
-    letter = event.ctx;
+    // send message
     const channel = this.channels[letter.channel];
     if (!channel) {
       throw new Error('channel not exist');
     }
-
     const res = await channel.sendMessage(letter.msg);
-    return this.emit(new Event('afterSend', res));
+
+    // emit afterSend event
+    await this.emit(new Event('afterSend', res));
+
+    return res;
   }
 
   on(eventName, callback) {
@@ -98,11 +98,7 @@ class Pigeon {
 
     for (const callback of list) {
       await callback(event);
-      if (event.__mock_data__) {
-        break;
-      }
     }
-    return event;
   }
 }
 
