@@ -3,10 +3,11 @@ const mock = require('../mock')
 mock('nodemailer', () => {
     return {
         createTransport: function (object) {
-            object.sendMail = function (options, callback) {
-                callback('', options)
+            const testObject = object
+            testObject.sendMail = function (options,callback) {
+                callback(null,options)
             }
-            return object
+            return testObject
         }
     }
 })

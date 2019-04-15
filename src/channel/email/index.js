@@ -1,5 +1,6 @@
 const nodemailer = require('nodemailer')
 const Channel = require('../index')
+const {promisify} = require('util')
 
 /**
  * Email Channel
@@ -28,36 +29,23 @@ class Email extends Channel {
 
     /**
      *
-     * @param {Object} mgs - information about email
-     * @param {String} mgs.sender - email's sender
-     * @param {String} mgs.receiver - email's receiver
-     * @param {String} mgs.subject- email's subject
-     * @param {String} mgs.message - email's message
+     * @param {Object} msg - information about email
+     * @param {String} msg.sender - email's sender
+     * @param {String} msg.receiver - email's receiver
+     * @param {String} msg.subject- email's subject
+     * @param {String} msg.message - email's message
      */
-    sendMessage(mgs) {
+    sendMessage(msg) {
+        let sender = msg.sender || this.auth.user;
 
-        return new Promise((resolve, reject) => {
-                let sender = '';
-                if (mgs.sender) {
-                    sender = mgs.sender
-                } else {
-                    sender = this.auth.user
-                }
+        const sendMail = promisify(this.mailTransport.sendMail)
 
-                this.mailTransport.sendMail({
-                    form: sender,
-                    to: mgs.receiver,
-                    subject: mgs.subject,
-                    text: mgs.message
-                }, (err, info) => {
-                    if (err) {
-                        reject(err)
-                    } else {
-                        resolve(info)
-                    }
-                })
-            }
-        )
+        return sendMail({
+            form: sender,
+            to: msg.receiver,
+            subject: msg.subject,
+            text: msg.message
+        })
     }
 }
 
