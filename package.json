@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/index.js",
   "scripts": {
-    "lint": "./node_modules/.bin/prettier -l 'src/**/*.js' && eslint ./src",
+    "lint": "./node_modules/.bin/prettier -l '@(src|test)/**/*.js' && eslint ./src",
     "test": "./node_modules/.bin/mocha"
   },
   "repository": {
