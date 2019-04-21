@@ -1,105 +1,105 @@
-const Channel = require('./channel');
-const Plugin = require('./plugin');
-const Event = require('./event');
+const Channel = require('./channel')
+const Plugin = require('./plugin')
+const Event = require('./event')
 
 class Pigeon {
   constructor() {
-    this.channels = {};
-    this.events = {};
+    this.channels = {}
+    this.events = {}
   }
 
   addChannel(instance) {
     if (!(instance instanceof Channel)) {
-      throw new Error('add channel failed, you must input a channel instance.');
+      throw new Error('add channel failed, you must input a channel instance.')
     }
-    
-    const { name } = instance;
+
+    const { name } = instance
     if (!name || typeof name !== 'string') {
-      throw new Error('channel name must be a string');
+      throw new Error('channel name must be a string')
     }
     if (this.channels[name]) {
-      throw new Error(`[${name}] channel already exists`);
+      throw new Error(`[${name}] channel already exists`)
     }
-    
-    this.channels[name] = instance;
+
+    this.channels[name] = instance
   }
 
   addPlugin(plugin) {
     if (!(plugin instanceof Plugin)) {
-      throw new Error('add plugin failed, you must input a plugin instance.');
+      throw new Error('add plugin failed, you must input a plugin instance.')
     }
 
-    plugin.main(this);
+    plugin.main(this)
   }
 
   async send(letter) {
     if (typeof letter !== 'object') {
-      throw new Error('letter must be a object');
+      throw new Error('letter must be a object')
     }
 
     // emit beforeSend event
-    await this.emit(new Event('beforeSend', letter));
+    await this.emit(new Event('beforeSend', letter))
 
     // send message
-    const channel = this.channels[letter.channel];
+    const channel = this.channels[letter.channel]
     if (!channel) {
-      throw new Error('channel not exist');
+      throw new Error('channel not exist')
     }
-    const res = await channel.sendMessage(letter.msg);
+    const res = await channel.sendMessage(letter.msg)
 
     // emit afterSend event
-    await this.emit(new Event('afterSend', res));
+    await this.emit(new Event('afterSend', res))
 
-    return res;
+    return res
   }
 
   on(eventName, callback) {
     if (typeof eventName !== 'string') {
-      throw new Error('event name must be string');
+      throw new Error('event name must be string')
     }
     if (typeof callback !== 'function') {
-      throw new Error('event callback must be a function');
+      throw new Error('event callback must be a function')
     }
 
     if (!Array.isArray(this.events[eventName])) {
-      this.events[eventName] = [];
+      this.events[eventName] = []
     }
-    this.events[eventName].push(callback);
+    this.events[eventName].push(callback)
   }
 
   off(eventName, callback) {
     if (typeof eventName !== 'string') {
-      throw new Error('event name must be string');
+      throw new Error('event name must be string')
     }
 
     if (typeof callback === 'undefined') {
-      delete this.events[eventName];
-      return;
+      delete this.events[eventName]
+      return
     }
-    const events = this.events[eventName];
+    const events = this.events[eventName]
     if (!Array.isArray(events)) {
-      return;
+      return
     }
-    const index = events.indexOf(callback);
+    const index = events.indexOf(callback)
     if (index !== -1) {
-      events.splice(index, 1);
+      events.splice(index, 1)
     }
   }
 
   async emit(event) {
     if (!(event instanceof Event)) {
-      return;
+      return
     }
 
-    const list = this.events[event.name];
+    const list = this.events[event.name]
     if (!Array.isArray(list)) {
-      return;
+      return
     }
 
     for (const callback of list) {
-      await callback(event);
+      await callback(event)
     }
   }
 }
 
-module.exports = Pigeon;
+module.exports = Pigeon

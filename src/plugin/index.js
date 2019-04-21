@@ -1,8 +1,8 @@
 class Plugin {
   // eslint-disable-next-line
   main(pigeon) {
-    return;
+    return
   }
 }
 
-module.exports = Plugin;
+module.exports = Plugin

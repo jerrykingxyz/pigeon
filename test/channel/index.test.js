@@ -1,4 +1,3 @@
 describe('channel test', () => {
-  require('./webhook.test.js');
-});
-
+  require('./webhook.test.js')
+})

@@ -4,13 +4,13 @@ class Channel {
    * @param { string} name - channel instance name
    */
   constructor(name) {
-    this.name = name;
+    this.name = name
   }
 
   // eslint-disable-next-line
   async sendMessage(msg) {
-    return;
+    return
   }
 }
 
-module.exports = Channel;
+module.exports = Channel
