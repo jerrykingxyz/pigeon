@@ -1,7 +1,7 @@
 class Channel {
   /**
    * @constructor
-   * @param { string} name - channel instance name
+   * @param {string} name - channel instance name
    */
   constructor(name) {
     this.name = name
